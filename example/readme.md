@@ -2,6 +2,8 @@ Version **arduino_A_green_circular_sticker_on_the_back** is a new release. In th
 
 Version **arduino_A_green_circular_sticker_on_the_back** has a green circular sticker on the back.
 
+<img width="922" height="744" alt="e-paper-4 2-1" src="https://github.com/user-attachments/assets/43ca006b-e6cf-4c35-8dac-670f28b0c266" />
+
 
 
 **Arduino**: This folder contains sample programs for the Arduino platform, which is known for its ease of use and versatility in creating interactive electronic projects.
