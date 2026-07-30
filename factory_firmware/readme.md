@@ -1,3 +1,6 @@
+# If this driver does not turn on the screen, please try the V1.0 or V1.2 version of the driver instead.
+
+
 # How to install the factory demo firmware with flash download tool?
 
 #### 1.Preparation:
