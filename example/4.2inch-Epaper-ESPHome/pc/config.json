@@ -1,0 +1,10 @@
+{
+  "host": "epaper-42.local",
+  "api_port": 6053,
+  "expected_name": "epaper-42",
+  "web_port": 8099,
+  "switch_object_id": "led",
+  "button_object_id": "center_button",
+  "wifi_object_id": "wifi_signal",
+  "ip_object_id": "ip_address"
+}

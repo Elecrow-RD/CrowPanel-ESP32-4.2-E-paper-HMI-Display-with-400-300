@@ -1,0 +1,9 @@
+.venv/
+.venv-build/
+.esphome/
+__pycache__/
+firmware/secrets.yaml
+pc/device-secrets.yaml
+*.bin
+*.elf
+*.log
