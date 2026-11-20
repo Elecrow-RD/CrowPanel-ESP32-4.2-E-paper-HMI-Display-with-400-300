@@ -1,0 +1,31 @@
+title: CrowPanel Light
+views:
+  - title: Light Control
+    path: light
+    icon: mdi:lightbulb
+    cards:
+      - type: markdown
+        content: |
+          # CrowPanel ESP32 E-Paper HMI 4.2-inch Display
+
+          V1.2 · Light Control
+
+          Use the switch below or press the center button on the display.
+          The LED, e-paper screen and this dashboard stay in sync.
+      - type: tile
+        entity: switch.crowpanel_light_led
+        name: LED
+        icon: mdi:lightbulb
+        color: amber
+        tap_action:
+          action: toggle
+        icon_tap_action:
+          action: toggle
+        features:
+          - type: toggle
+      - type: history-graph
+        title: LED State
+        hours_to_show: 1
+        entities:
+          - entity: switch.crowpanel_light_led
+            name: LED

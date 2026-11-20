@@ -1,0 +1,125 @@
+substitutions:
+  name: crowpanel-light
+  led_pin: GPIO16
+
+esphome:
+  name: ${name}
+  friendly_name: CrowPanel ESP32 E-Paper HMI 4.2-inch Display
+  on_boot:
+    priority: -100
+    then:
+      - component.update: epaper
+
+esp32:
+  board: esp32-s3-devkitc-1
+  flash_size: 8MB
+  framework:
+    type: esp-idf
+
+logger:
+  hardware_uart: UART0
+  level: DEBUG
+
+api:
+  encryption:
+    key: !secret crowpanel_api_key
+  reboot_timeout: 0s
+
+ota:
+  - platform: esphome
+    password: !secret crowpanel_ota_password
+
+wifi:
+  ssid: !secret crowpanel_wifi_ssid
+  password: !secret crowpanel_wifi_password
+  reboot_timeout: 0s
+  ap:
+    ssid: Epaper 4.2 Setup
+    password: !secret crowpanel_ap_password
+
+captive_portal:
+
+external_components:
+  - source:
+      type: local
+      path: components
+    components: [crowpanel_epaper]
+
+spi:
+  clk_pin: GPIO12
+  mosi_pin: GPIO11
+
+switch:
+  - platform: gpio
+    pin:
+      number: ${led_pin}
+      inverted: true
+    id: led_load
+    name: LED
+    icon: mdi:lightbulb
+    restore_mode: ALWAYS_OFF
+    on_turn_on:
+      - logger.log: "LED ON: GPIO output and API state synchronized"
+      - component.update: epaper
+    on_turn_off:
+      - logger.log: "LED OFF: GPIO output and API state synchronized"
+      - component.update: epaper
+
+binary_sensor:
+  - platform: gpio
+    id: center_key
+    name: Center Button
+    entity_category: diagnostic
+    pin:
+      number: GPIO5
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    filters:
+      - delayed_on: 30ms
+      - delayed_off: 30ms
+    on_press:
+      - logger.log: "Center button pressed: toggling LED"
+      - switch.toggle: led_load
+  - platform: status
+    name: Connection
+
+sensor:
+  - platform: wifi_signal
+    name: WiFi Signal
+    update_interval: 60s
+    entity_category: diagnostic
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: IP Address
+      entity_category: diagnostic
+
+image:
+  - platform: file
+    file: assets/light-on.png
+    id: light_on_image
+    type: BINARY
+  - platform: file
+    file: assets/light-off.png
+    id: light_off_image
+    type: BINARY
+
+display:
+  - platform: crowpanel_epaper
+    id: epaper
+    cs_pin:
+      number: GPIO45
+      ignore_strapping_warning: true
+    dc_pin:
+      number: GPIO46
+      ignore_strapping_warning: true
+    reset_pin: GPIO47
+    busy_pin: GPIO48
+    power_pin: GPIO7
+    update_interval: never
+    lambda: |-
+      it.image(0, 0, id(led_load).state ? id(light_on_image) : id(light_off_image));
+      ESP_LOGI("panel", "Rendering LED %s", id(led_load).state ? "ON" : "OFF");
